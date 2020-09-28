@@ -53,7 +53,7 @@ spec:
         name: wordpress
         env:
         - name: WORDPRESS_DB_HOST
-          value: smallproject3.ct6gyzehincn.ap-southeast-1.rds.amazonaws.com
+          value: cilsydb.ct6gyzehincn.ap-southeast-1.rds.amazonaws.com
         - name: WORDPRESS_DB_PASSWORD
           valueFrom:
             secretKeyRef:
