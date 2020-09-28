@@ -86,7 +86,7 @@ type: Opaque
 stringData:
   username: root
   password: Admin123
-  database: utamawp
+  database: prodwp
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
