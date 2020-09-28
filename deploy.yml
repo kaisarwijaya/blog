@@ -1,17 +1,17 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: wordpress
+  name: wordpress-stag
   namespace: staging
   labels:
-    app: wordpress
+    app: wordpress-stag
 spec:
   ports:
     - protocol: TCP
       port: 80
       targetPort: 80
   selector:
-    app: wordpress
+    app: wordpress-stag
     tier: frontend
 ---
 apiVersion: v1
@@ -20,7 +20,7 @@ metadata:
   name: wp-pv-claim
   namespace: staging
   labels:
-    app: wordpress
+    app: wordpress-stag
 spec:
   accessModes:
     - ReadWriteOnce
@@ -31,26 +31,26 @@ spec:
 apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
 kind: Deployment
 metadata:
-  name: wordpress
+  name: wordpress-stag
   namespace: staging
   labels:
-    app: wordpress
+    app: wordpress-stag
 spec:
   selector:
     matchLabels:
-      app: wordpress
+      app: wordpress-stag
       tier: frontend
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: wordpress
+        app: wordpress-stag
         tier: frontend
     spec:
       containers:
       - image: wordpress:php7.4-apache
-        name: wordpress
+        name: wordpress-stag
         env:
         - name: WORDPRESS_DB_HOST
           value: cilsydb.ct6gyzehincn.ap-southeast-1.rds.amazonaws.com
@@ -65,10 +65,10 @@ spec:
               name: mysql-wp
               key: username
         - name: WORDPRESS_DB_NAME
-          value: wordpress
+          value: wordpress-stag
         ports:
         - containerPort: 80
-          name: wordpress
+          name: wordpress-stag
         volumeMounts:
         - name: wordpress-persistent-storage
           mountPath: /var/www/html
@@ -92,7 +92,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   namespace: staging
-  name: wordpress-production
+  name: wordpress-stag
   annotations:
    # nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
@@ -103,5 +103,5 @@ spec:
       paths:
       #- path: /
       - backend:
-          serviceName: wordpress
+          serviceName: wordpress-stag
           servicePort: 80
